@@ -7,7 +7,9 @@
 <script>
 
 $('#reset').click(function() {
-  $.get("/deleteAllPostures");
+  $.get("/deleteAllPostures", function() {
+    location.reload();
+  });
 });
 
 var svg = d3.select("svg"),
