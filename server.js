@@ -30,6 +30,12 @@ app.get('/addPosture/:angle', function (req, res) {
   res.send('Successfully added posture!');
 })
 
+app.get('/deleteAllPostures', function (req, res) {
+  Posture.remove({}, function() {
+    res.send('Successfully cleared postures!');
+  })
+})
+
 app.get('/getPostures', function (req, res) {
   Posture.find(function (err, postures) {
     if (err) {
