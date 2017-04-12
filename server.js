@@ -13,7 +13,7 @@ mongoose.connect('mongodb://admin:ese350@ds149820.mlab.com:49820/posture-data', 
 
 var addPostureData = function (angle, callback) {
   var newPosture = new Posture({
-    time: Date(),
+    time: (new Date()).getTime(),
     angle: angle
   });
   console.log(newPosture);
