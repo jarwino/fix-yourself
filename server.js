@@ -11,7 +11,7 @@ mongoose.connect('mongodb://admin:ese350@ds149820.mlab.com:49820/posture-data', 
   }
 });
 
-var addPostureData = function (angle) {
+var addPostureData = function (angle, callback) {
   var newPosture = new Posture({
     time: Date(),
     angle: angle
@@ -21,13 +21,17 @@ var addPostureData = function (angle) {
     if (err) {
       console.log("Error saving posture data!");
       console.log(err);
+    } else {
+      callback();
     }   
   });
 }
 
 app.post('/addPosture', function (req, res) {
-  addPostureData(req.query.angle);
-  res.send('Successfully added posture!' + " " + req.query.angle);
+  addPostureData(req.query.angle, function() {
+    res.send('Successfully added posture!' + " " + req.query.angle);
+  });
+  
 })
 
 app.get('/deleteAllPostures', function (req, res) {
