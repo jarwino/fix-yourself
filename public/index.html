@@ -21,9 +21,9 @@
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script>
 
-setTimeout(function(){
-   window.location.reload(1);
-}, 5000);
+//setTimeout(function(){
+//   window.location.reload(1);
+//}, 5000);
 
 $('#reset').click(function() {
   $.get("/deleteAllPostures", function() {
@@ -36,8 +36,6 @@ var svg = d3.select("svg"),
     width = +svg.attr("width") - margin.left - margin.right,
     height = +svg.attr("height") - margin.top - margin.bottom,
     g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-var parseTime = d3.timeParse("%d-%b-%y");
 
 var x = d3.scaleTime()
     .rangeRound([0, width]);
