@@ -58,7 +58,7 @@ $.get("/getPostures", function(postures) {
 var displayData = function(data) {
 
   x.domain(d3.extent(data, function(d) {
-    return new Date(d.time);
+    return d.time;
   }));
   y.domain(d3.extent(data, function(d) {
     return d.angle;
