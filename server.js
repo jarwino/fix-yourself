@@ -25,9 +25,9 @@ var addPostureData = function (angle) {
   });
 }
 
-app.get('/addPosture/:angle', function (req, res) {
-  addPostureData(req.params.angle);
-  res.send('Successfully added posture!');
+app.post('/addPosture', function (req, res) {
+  addPostureData(req.query.angle);
+  res.send('Successfully added posture!' + " " + req.query.angle);
 })
 
 app.get('/deleteAllPostures', function (req, res) {
