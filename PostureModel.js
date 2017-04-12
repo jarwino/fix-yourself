@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var postureModel = new Schema({
-  time: String,
+  time: Number,
   angle: Number
 });
 
