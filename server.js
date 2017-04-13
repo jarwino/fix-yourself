@@ -29,7 +29,7 @@ var addPostureData = function (angle, callback) {
 }
 
 var addForwardPostureData = function (angle, callback) {
-  var newPosture = new Posture({
+  var newPosture = new ForwardPosture({
     time: (new Date()).getTime(),
     angle: angle
   });
