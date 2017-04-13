@@ -103,16 +103,16 @@ var displayData = function(data) {
 
 
 var svg2 = d3.select("#graph2"),
-    margin = {top: 20, right: 20, bottom: 30, left: 50},
-    width = +svg.attr("width") - margin.left - margin.right,
-    height = +svg.attr("height") - margin.top - margin.bottom,
-    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    margin2 = {top: 20, right: 20, bottom: 30, left: 50},
+    width2 = +svg.attr("width") - margin2.left - margin2.right,
+    height2 = +svg.attr("height") - margin2.top - margin2.bottom,
+    g2 = svg.append("g").attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
 
 var x2 = d3.scaleTime()
-    .rangeRound([0, width]);
+    .rangeRound([0, width2]);
 
 var y2 = d3.scaleLinear()
-    .rangeRound([height, 0]);
+    .rangeRound([height2, 0]);
 
 var line2 = d3.line()
     .x(function(d) { return x(d.time); })
@@ -126,21 +126,21 @@ $.get("/getForwardPostures", function(postures) {
 
 var displayForwardData = function(data) {
 
-  x.domain(d3.extent(data, function(d) {
+  x2.domain(d3.extent(data, function(d) {
     return d.time;
   }));
-  y.domain(d3.extent(data, function(d) {
+  y2.domain(d3.extent(data, function(d) {
     return d.angle;
   }));
 
-  g.append("g")
+  g2.append("g")
       .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x))
+      .call(d3.axisBottom(x2))
     .select(".domain")
       .remove();
 
-  g.append("g")
-      .call(d3.axisLeft(y))
+  g2.append("g")
+      .call(d3.axisLeft(y2))
     .append("text")
       .attr("fill", "#000")
       .attr("transform", "rotate(-90)")
@@ -149,14 +149,14 @@ var displayForwardData = function(data) {
       .attr("text-anchor", "end")
       .text("Angle (degrees)");
 
-  g.append("path")
+  g2.append("path")
       .datum(data)
       .attr("fill", "none")
       .attr("stroke", "steelblue")
       .attr("stroke-linejoin", "round")
       .attr("stroke-linecap", "round")
       .attr("stroke-width", 1.5)
-      .attr("d", line);
+      .attr("d", line2);
 }
 
 
