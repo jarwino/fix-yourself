@@ -53,7 +53,7 @@ app.post('/addPosture', function (req, res) {
 
 app.post('/addForwardPosture', function (req, res) {
   addForwardPostureData(req.query.angle, function() {
-    res.send('Successfully added posture!' + " " + req.query.angle);
+    res.send('Successfully added forward posture!' + " " + req.query.angle);
   });
   
 })
