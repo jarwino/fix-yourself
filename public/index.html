@@ -11,29 +11,122 @@
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
+<body style="background-color:#FFFeea;">
+
 <div class="container" style="text-align: center;">
   <h1>Fix Yourself - an ESE 350 marvel</h1>
-  <button type="button" id="reset" class="btn btn-warning">Reset</button>
+  <button type="button" id="reset" class="btn btn-danger">Clear all posture data</button>
+</div>
+
+<hr>
+
+<div class="container" style="text-align: center;">
+  <h2>Posture Goodness Value Over Time (sliding average)</h2>
+  <h4><i>Horizontal</i></h4>
+  <table style="width:500px;" align="center" border="1">
+    <tr>
+      <td align="center" style="font-weight: bold">4 min ago</td>
+      <td align="center" style="font-weight: bold">3 min ago</td>
+      <td align="center" style="font-weight: bold">2 min ago</td>
+      <td align="center" style="font-weight: bold">1 min ago</td>
+      <td align="center" style="font-weight: bold">Current</td>
+    </tr>
+    <tr>
+      <td align="center" id="average0"></td>
+      <td align="center" id="average1"></td>
+      <td align="center" id="average2"></td>
+      <td align="center" id="average3"></td>
+      <td align="center" id="average4"></td>
+    </tr>
+  </table>
+
+  <br>
+
+  <h4><i>Vertical</i></h4>
+  <table style="width:500px;" align="center" border="1">
+    <tr>
+      <td align="center" style="font-weight: bold">4 min ago</td>
+      <td align="center" style="font-weight: bold">3 min ago</td>
+      <td align="center" style="font-weight: bold">2 min ago</td>
+      <td align="center" style="font-weight: bold">1 min ago</td>
+      <td align="center" style="font-weight: bold">Current</td>
+    </tr>
+    <tr>
+      <td align="center" id="2average0"></td>
+      <td align="center" id="2average1"></td>
+      <td align="center" id="2average2"></td>
+      <td align="center" id="2average3"></td>
+      <td align="center" id="2average4"></td>
+    </tr>
+  </table>
+  
 </div>
 
 <hr>
 
 <div class="container" style="text-align: center;">
   <h2>Left-and-right angle</h2>
-  
   <svg width="960" height="500" id="graph1"></svg>
 </div>
-
-<hr>
 
 <div class="container" style="text-align: center;">
   <h2>Forward-and-back angle</h2>
   <svg width="960" height="500" id="graph2"></svg>
 </div>
 
+<hr>
+
+
 
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script>
+
+$.get("/getPostures", function(postures) {
+  //if (postures.length && postures.length % 5 == 0) {
+    var count = 0;
+    for (var i = postures.length - 1; i > postures.length - 1 - Math.min(postures.length, 25); i -= 5) {
+      
+      var sum = 0;
+      sum += (postures[i])['angle'] + (postures[i-1])['angle'] + (postures[i-2])['angle'] + (postures[i-3])['angle'] + (postures[i-4])['angle'];
+      var average = sum / 5.0;
+      //$('#averages').text(average.toFixed(2) + " " + $('#averages').text());
+      $('#average' + (4 - count)).text(average.toFixed(2) + " degrees");
+      if (Math.abs(average.toFixed(2)) < 10) {
+        $('#average' + (4 - count)).css("color", "green");
+      } else {
+        $('#average' + (4 - count)).css("color", "red");
+      }
+      count++;
+    //}
+  }
+  
+  
+  
+});
+
+$.get("/getForwardPostures", function(postures) {
+  //if (postures.length && postures.length % 5 == 0) {
+    var count = 0;
+    for (var i = postures.length - 1; i > postures.length - 1 - Math.min(postures.length, 25); i -= 5) {
+      
+      var sum = 0;
+      sum += (postures[i])['angle'] + (postures[i-1])['angle'] + (postures[i-2])['angle'] + (postures[i-3])['angle'] + (postures[i-4])['angle'];
+      var average = sum / 5.0;
+      //$('#averages').text(average.toFixed(2) + " " + $('#averages').text());
+      $('#2average' + (4 - count)).text(average.toFixed(2) + " degrees");
+      if (Math.abs(average.toFixed(2)) < 10) {
+        $('#2average' + (4 - count)).css("color", "green");
+      } else {
+        $('#2average' + (4 - count)).css("color", "red");
+      }
+      count++;
+    //}
+  }
+  
+  
+  
+});
+
 
 
 setTimeout(function(){
@@ -48,8 +141,6 @@ $('#reset').click(function() {
     })
   });
 });
-
-
 
 
 var svg = d3.select("#graph1"),
@@ -67,6 +158,8 @@ var y = d3.scaleLinear()
 var line = d3.line()
     .x(function(d) { return x(d.time); })
     .y(function(d) { return y(d.angle); });
+
+
     
 $.get("/getPostures", function(postures) {
   console.log(postures);
@@ -79,9 +172,12 @@ var displayData = function(data) {
   x.domain(d3.extent(data, function(d) {
     return d.time;
   }));
-  y.domain(d3.extent(data, function(d) {
-    return d.angle;
+
+  var angleRange = [-90, 90];
+  y.domain(d3.extent(angleRange, function(d) {
+    return d;
   }));
+
 
   g.append("g")
       .attr("transform", "translate(0," + height + ")")
@@ -134,11 +230,14 @@ $.get("/getForwardPostures", function(postures) {
 
 var displayForwardData = function(data) {
 
+
   x2.domain(d3.extent(data, function(d) {
     return d.time;
   }));
-  y2.domain(d3.extent(data, function(d) {
-    return d.angle;
+
+  var angleRange = [-90, 90];
+  y2.domain(d3.extent(angleRange, function(d) {
+    return d;
   }));
 
   g2.append("g")
@@ -170,3 +269,6 @@ var displayForwardData = function(data) {
 
 
 </script>
+
+
+</body>
